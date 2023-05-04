@@ -1,0 +1,157 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "apiVersion":"2017-06-01",
+      "name": "VNet1",
+      "location": "eastus",
+      
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "192.168.0.0/16"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "firstsubnet",
+            "properties": {
+              "addressPrefix": "192.168.5.0/24"
+            }
+          },
+          {
+            "name": "secondsubnet",
+            "properties": {
+              "addressPrefix": "192.168.10.0/24"
+            }
+          }
+        ]
+      }
+    },{
+          "type": "Microsoft.Compute/virtualMachines",
+          "name": "virtualMachine1",
+          "location": "eastus",
+          "apiVersion": "2022-03-01",
+          "dependsOn": [
+              "[resourceId('Microsoft.Network/virtualNetworks', 'VNet1')]"
+          ],
+          "properties": {
+              "hardwareProfile": {
+                  "vmSize": "Standard_B2s"
+              },
+              "storageProfile": {
+                  "imageReference": {
+                      "publisher": "MicrosoftWindowsServer",
+                      "offer": "WindowsServer",
+                      "sku": "2019-Datacenter",
+                      "version": "latest"
+                  },
+                  "osDisk": {
+                      "createOption": "FromImage"
+                  }
+              },
+              "osProfile": {
+                  "computerName": "virtualMachine1",
+                  "adminUsername": "useradmin",
+                  "adminPassword": "Ch@lla003"
+              },
+              "networkProfile": {
+                  "networkInterfaces": [
+                      {
+                          "id": "[resourceId('Microsoft.Network/networkInterfaces', 'myNIC1')]"
+                      }
+                  ]
+              }
+          }
+      },
+      {
+          "type": "Microsoft.Network/networkInterfaces",
+          "name": "myNIC1",
+          "location": "eastus",
+          "apiVersion": "2017-06-01",
+          "dependsOn": [
+              "[resourceId('Microsoft.Network/virtualNetworks', 'VNet1')]"
+          ],
+          "properties": {
+              "ipConfigurations": [
+                  {
+                      "name": "myIPConfig",
+                      "properties": {
+                          "subnet": {
+                              "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', 'VNet1'), '/subnets/firstsubnet')]"
+                          },
+                          "privateIPAllocationMethod": "Dynamic"
+                      }
+                  }
+              ]
+          }
+      },
+      {
+        "type": "Microsoft.Compute/virtualMachines",
+        "name": "virtualMachine2",
+        "location": "eastus",
+        "apiVersion": "2022-03-01",
+        "dependsOn": [
+            "[resourceId('Microsoft.Network/virtualNetworks','VNet1')]"
+        ],
+        "properties": {
+            "hardwareProfile": {
+                "vmSize": "Standard_B1s"
+            },
+            "storageProfile": {
+                "imageReference": {
+                    "publisher": "Canonical",
+                    "offer": "UbuntuServer",
+                    "sku": "18.04-LTS",
+                    "version": "latest"
+                },
+                "osDisk": {
+                    "createOption": "FromImage"
+                }
+            },
+            "osProfile": {
+                "computerName": "virtualMachine2",
+                "adminUsername": "useradmin",
+                "adminPassword": "Ch@lla003"
+            },
+            "networkProfile": {
+                "networkInterfaces": [
+                    {
+                        "id": "[resourceId('Microsoft.Network/networkInterfaces', 'myNIC2')]"
+                    }
+                ]
+            }
+        }
+      },
+      {
+        "type": "Microsoft.Network/networkInterfaces",
+        "name": "myNIC2",
+        "location": "eastus",
+        "apiVersion": "2017-06-01",
+        "dependsOn": [
+            "[resourceId('Microsoft.Network/virtualNetworks', 'VNet1')]"
+        ],
+        "properties": {
+            "ipConfigurations": [
+                {
+                    "name": "myIPConfig",
+                    "properties": {
+                        "subnet": {
+                            "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', 'VNet1'), '/subnets/secondsubnet')]"
+                        },
+                        "privateIPAllocationMethod": "Dynamic"
+                    }
+                }
+            ]
+        }
+      }
+    ]
+
+}
+
+
+
+
+
