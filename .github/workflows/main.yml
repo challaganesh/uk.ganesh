@@ -16,8 +16,8 @@ jobs:
       run: |
         # Add your validation command
         az login
-        az  deployment group validate --resource-group challa003 --template-file totalarm.json
+        az  deployment group validate --resource-group challa --template-file arm.json
     - name: Deploy
       run: |
         # Add your deployment command here   
-         az deployment group create --resource-group challa003 --template-file totalarm.json
+         az deployment group create --resource-group challa --template-file arm.json
