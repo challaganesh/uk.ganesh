@@ -12,12 +12,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Validate syntax
+    - name: Validation
       run: |
-        # Add your validation command 
-        az  bicep build --file full.bicep
-    - name: Deploy to Azure
+        # Add your validation command
+        az login
+        az  deployment group validate --resource-group challa003 --template-file total.json
+    - name: Deploy
       run: |
-        # Add your code 
-         az login
-         az deployment group create --resource-group ganesh --template-file full.bicep
+        # Add your deployment command   
+         az deployment group create --resource-group challa003 --template-file total.json
