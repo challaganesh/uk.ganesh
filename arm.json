@@ -6,7 +6,7 @@
       "type": "Microsoft.Network/virtualNetworks",
       "apiVersion":"2017-06-01",
       "name": "VNet1",
-      "location": "eastus",
+      "location": "uksouth",
       
       "properties": {
         "addressSpace": {
@@ -32,7 +32,7 @@
     },{
           "type": "Microsoft.Compute/virtualMachines",
           "name": "virtualMachine1",
-          "location": "eastus",
+          "location": "uksouth",
           "apiVersion": "2022-03-01",
           "dependsOn": [
               "[resourceId('Microsoft.Network/virtualNetworks', 'VNet1')]"
@@ -69,7 +69,7 @@
       {
           "type": "Microsoft.Network/networkInterfaces",
           "name": "myNIC1",
-          "location": "eastus",
+          "location": "uksouth",
           "apiVersion": "2017-06-01",
           "dependsOn": [
               "[resourceId('Microsoft.Network/virtualNetworks', 'VNet1')]"
@@ -91,7 +91,7 @@
       {
         "type": "Microsoft.Compute/virtualMachines",
         "name": "virtualMachine2",
-        "location": "eastus",
+        "location": "uksouth",
         "apiVersion": "2022-03-01",
         "dependsOn": [
             "[resourceId('Microsoft.Network/virtualNetworks','VNet1')]"
@@ -128,7 +128,7 @@
       {
         "type": "Microsoft.Network/networkInterfaces",
         "name": "myNIC2",
-        "location": "eastus",
+        "location": "uksouth",
         "apiVersion": "2017-06-01",
         "dependsOn": [
             "[resourceId('Microsoft.Network/virtualNetworks', 'VNet1')]"
