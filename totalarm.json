@@ -1,0 +1,155 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+
+    "resources": [
+        {
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2021-02-01",
+            "name": "VNet2",
+            "location": "Central US",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "192.168.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "first subnet",
+                        "properties": {
+                            "addressPrefix": "192.168.5.0/24"
+                        }
+                    },{
+                        "name": "second subnet",
+                        "properties": {
+                            "addressPrefix": "192.168.10.0/24"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2021-02-01",
+            "name": "myNIC1",
+            "location": "Central US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', 'VNet2]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', 'VNet2, '/subnets/first subnet')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2021-03-01",
+            "name": "virtual machine1",
+            "location": "Central US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', 'VNet2')]",
+                "[resourceId('Microsoft.Network/networkInterfaces', 'myNIC1')]"
+
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_B1ls"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "Canonical",
+                        "offer": "UbuntuServer",
+                        "sku": "18.04-LTS",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage"
+                    }
+                },
+                "osProfile": {
+                    "computerName": "virtual Machine1",
+                    "adminUsername": "useradmin",
+                    "adminPassword": "ch@lla003"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'myNIC1')]"
+                        }
+                    ]
+                }
+            }
+        },
+         {
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2021-02-01",
+            "name": "myNIC2",
+            "location": "Central US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', 'VNet2')]"
+            ],
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "subnet": {
+                                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', 'VNet2'), '/subnets/second subnet')]"
+                            },
+                            "privateIPAllocationMethod": "Dynamic"
+                        }
+                    }
+                ]
+            }
+        }, {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2021-03-01",
+            "name": "virtual machine2",
+            "location": "Central US",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', 'VNet2')]",
+                "[resourceId('Microsoft.Network/networkInterfaces', 'myNIC2')]"
+
+            ],
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_B1ls"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "Canonical",
+                        "offer": "UbuntuServer",
+                        "sku": "18.04-LTS",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage"
+                    }
+                },
+                "osProfile": {
+                    "computerName": "virtual machine2",
+                    "adminUsername": "useradmin",
+                    "adminPassword": "ch@lla003"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', 'myNIC2')]"
+                        }
+                    ]
+                }
+            }
+        }
+        
+    ]
+}
