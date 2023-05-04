@@ -14,7 +14,7 @@ jobs:
 
     - name: Validation
       run: |
-        # Add your validation
+        # Add your validation here
         az login
         az  deployment group validate --resource-group rg23 --template-file arm.json
     - name: Deploy
